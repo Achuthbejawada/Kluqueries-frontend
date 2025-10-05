@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Modern Attendance Calculator</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="calculator-page">
+
+  <!-- Header -->
+  <header>
+    <img src="klulogo.png" alt="KL University Logo" class="logo">
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="cal.html">Calculator</a>
+      <a href="profile.html">Profile</a>
+    </nav>
+  </header>
+
+  <main>
+    <h2>Modern Attendance Calculator</h2>
+
+    <div class="calculator-container">
+      <!-- Left: Set Weights -->
+      <div class="section" style="flex:1; min-width:280px;">
+        <h3>Set Weights</h3>
+        <div class="input-group">
+          <label>Lecture Weightage:</label>
+          <input type="number" id="lectureWeight" value="100">
+        </div>
+        <div class="input-group">
+          <label>Practical Weightage:</label>
+          <input type="number" id="practicalWeight" value="50">
+        </div>
+        <div class="input-group">
+          <label>Tutorial Weightage:</label>
+          <input type="number" id="tutorialWeight" value="25">
+        </div>
+        <div class="input-group">
+          <label>Skill Weightage:</label>
+          <input type="number" id="skillingWeight" value="25">
+        </div>
+      </div>
+
+      <!-- Right: Enter Attendance -->
+      <div class="section" style="flex:1; min-width:280px;">
+        <h3>Enter Attendance</h3>
+
+        <div class="input-group">
+          <label>Lecture Attendance:</label>
+          <input type="number" id="lecture" placeholder="Enter attendance">
+          <input type="checkbox" id="lectureConducted" checked> Conducted
+        </div>
+
+        <div class="input-group">
+          <label>Practical Attendance:</label>
+          <input type="number" id="practical" placeholder="Enter attendance">
+          <input type="checkbox" id="practicalConducted" checked> Conducted
+        </div>
+
+        <div class="input-group">
+          <label>Tutorial Attendance:</label>
+          <input type="number" id="tutorial" placeholder="Enter attendance">
+          <input type="checkbox" id="tutorialConducted"> Conducted
+        </div>
+
+        <div class="input-group">
+          <label>Skill Attendance:</label>
+          <input type="number" id="skilling" placeholder="Enter attendance">
+          <input type="checkbox" id="skillingConducted"> Conducted
+        </div>
+
+        <button id="calculateAttendanceBtn">Calculate Attendance</button>
+
+        <div id="resultBox"></div>
+        <div id="quoteBox"></div>
+      </div>
+    </div>
+
+    <!-- Bunk Prediction -->
+    <div class="section" style="margin-top:30px;">
+      <button id="bunkBtn" style="width:100%; padding:12px; background:#1EDFE6; border:none; border-radius:8px; font-weight:bold; cursor:pointer;">Bunk Prediction</button>
+
+      <div id="bunkSection" style="display:none; margin-top:20px;">
+        <div class="input-group">
+          <label>How many classes are going to be conducted?</label>
+          <input type="number" id="totalClasses" placeholder="Enter total classes">
+        </div>
+        <div class="input-group">
+          <label>How many you want to attend?</label>
+          <input type="number" id="classesToAttend" placeholder="Enter classes you will attend">
+        </div>
+        <button id="calculateBunkBtn" style="width:100%; padding:12px; background:#7F5AF0; border:none; border-radius:8px; font-weight:bold; cursor:pointer;">Calculate</button>
+
+        <div id="bunkResultBox" style="margin-top:15px;"></div>
+        <div id="bunkQuoteBox" style="margin-top:5px;"></div>
+      </div>
+    </div>
+
+    <!-- Queries Section Buttons -->
+    <div class="queries-buttons" style="margin-top:30px; display:flex; gap:20px;">
+      <button id="viewQueriesBtn" style="flex:1; padding:12px; background:#FFA500; border:none; border-radius:8px; font-weight:bold; cursor:pointer;">View Queries</button>
+      <button id="submitQueryBtn" style="flex:1; padding:12px; background:#00BFFF; border:none; border-radius:8px; font-weight:bold; cursor:pointer;">Submit Query</button>
+    </div>
+
+    <!-- What's New -->
+    <div class="section" style="margin-top:30px;">
+      <h3>What's New?</h3>
+      <ul>
+        <li>You can adjust weightages for Lecture, Practical, Tutorial, Skill.</li>
+        <li>Bunk Prediction — plan how many classes you can attend safely.</li>
+        <li>Now you can ask queries regarding to your academics so that others can help you by replying to your queries.</li>
+        <li>No need to worry about replies,you will be directly notified to your mail when someone replies to your query.</li>
+        <li>You can access already exisitng queries by searching them.</li>
+      </ul>
+    </div>
+  </main>
+
+  <!-- Footer (untouched) -->
+  <footer>
+    <div class="footer-left">
+      <p>Developed by Achuth Bejawada</p>
+      <p>© 2025 Modern Attendance. All rights reserved.</p>
+    </div>
+    <div class="footer-right">
+      <a href="https://github.com/Achuthbejawada" target="_blank"><img src="Githubiconn.png" alt="GitHub"></a>
+      <a href="#"><img src="instagram.png" alt="Instagram"></a>
+      <a href="https://www.linkedin.com/in/achuth-bejawada/" target="_blank"><img src="linkedin.png" alt="LinkedIn"></a>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+  <script>
+    // Redirect to queries page
+    document.getElementById('viewQueriesBtn').addEventListener('click', () => {
+        window.location.href = 'queries.html';
+    });
+
+    document.getElementById('submitQueryBtn').addEventListener('click', () => {
+        window.location.href = 'queries.html#submit';
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,250 @@
+<!-- profile.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>User Profile | KL Queries</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter&family=Poppins:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="calculator-page">
+
+  <header>
+    <img src="klulogo.png" alt="KL University Logo" class="logo">
+    <nav>
+      <a href="cal.html">Calculator</a>
+      <a href="queries.html">View Queries</a>
+      <button id="logoutBtn" style="margin-left:10px; padding:6px 12px; background:#F87171; color:white; border:none; border-radius:6px; cursor:pointer;">Logout</button>
+    </nav>
+  </header>
+
+  <main>
+    <h2>User Profile</h2>
+
+    <div class="section profile-section">
+      <div class="input-group">
+        <label>Name:</label>
+        <input id="profileName" type="text" placeholder="Your name" disabled>
+      </div>
+      <div class="input-group">
+        <label>Email:</label>
+        <input id="profileEmail" type="email" placeholder="Your email" disabled>
+      </div>
+      <div class="input-group">
+        <label>Mobile:</label>
+        <input id="profileMobile" type="text" placeholder="Your mobile" disabled>
+      </div>
+      <div class="input-group">
+        <label>About:</label>
+        <textarea id="profileAbout" placeholder="Write something about yourself..." disabled></textarea>
+      </div>
+      <button onclick="saveProfile()"style="margin-left:10px; background:#0B0D1F; color:#fff; padding:8px 16px; border:none; border-radius:6px; cursor:pointer;">Save Profile</button>
+      <button onclick="enableEdit()" style="margin-left:10px; background:#0B0D1F; color:#fff; padding:8px 16px; border:none; border-radius:6px; cursor:pointer;">Edit Profile</button>
+    </div>
+
+    <div class="section" style="margin-top:30px;">
+      <h3>My Queries & Replies</h3>
+      <div id="myQueriesList" style="border:1px solid #ccc; padding:10px; border-radius:8px; max-height:400px; overflow-y:auto;">
+        <p>Loading your queries...</p>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="footer-left">
+      <p>Developed by Achuth Bejawada</p>
+      <p>© 2025 KL Queries. All rights reserved.</p>
+    </div>
+    <div class="footer-right">
+      <a href="https://github.com/Achuthbejawada" target="_blank"><img src="Githubiconn.png" alt="GitHub"></a>
+      <a href="#"><img src="instagram.png" alt="Instagram"></a>
+      <a href="https://www.linkedin.com/in/achuth-bejawada/" target="_blank"><img src="linkedin.png" alt="LinkedIn"></a>
+    </div>
+  </footer>
+
+<script>
+function formatIndianDate(dateStr) {
+  if (!dateStr) return "Unknown";
+  const d = new Date(dateStr);
+  if (isNaN(d)) return "Unknown";
+  const day = String(d.getDate()).padStart(2, '0');
+  const month = String(d.getMonth() + 1).padStart(2, '0');
+  const year = d.getFullYear();
+  const hours = String(d.getHours()).padStart(2, '0');
+  const minutes = String(d.getMinutes()).padStart(2, '0');
+  return `${day}-${month}-${year} ${hours}:${minutes}`;
+}
+
+function safeGet(id) {
+  return document.getElementById(id) || { value: "" };
+}
+
+function getCurrentUser() {
+  const raw = localStorage.getItem("currentUser");
+  if (!raw) return null;
+  try {
+    const parsed = JSON.parse(raw);
+    return parsed?.id ? parsed : null;
+  } catch {
+    return null;
+  }
+}
+
+function isLoggedIn() {
+  return !!localStorage.getItem("token");
+}
+
+async function saveProfile() {
+  const user = getCurrentUser();
+  const token = localStorage.getItem("token");
+
+  if (!user || !token || !user.id) {
+    alert("Missing user or token");
+    return;
+  }
+
+  const payload = {
+    name: safeGet("profileName").value.trim(),
+    email: safeGet("profileEmail").value.trim(),
+    mobile: safeGet("profileMobile").value.trim(),
+    about: safeGet("profileAbout").value.trim()
+  };
+
+  try {
+ const res = await fetch(`https://klqueries-backend-3.onrender.com/api/users/${user.id}`, {
+  method: "PUT",
+  headers: {
+    "Content-Type": "application/json",
+    "Authorization": `Bearer ${token}`
+  },
+  body: JSON.stringify(payload)
+});
+
+
+    if (!res.ok) {
+      const errText = await res.text();
+      throw new Error(errText || "Profile update failed");
+    }
+
+    const data = await res.json();
+    localStorage.setItem("currentUser", JSON.stringify(data));
+    alert("Profile updated successfully!");
+    window.location.reload();
+  } catch (err) {
+    alert("Error: " + err.message);
+  }
+}
+
+function enableEdit() {
+  safeGet("profileName").removeAttribute("disabled");
+  safeGet("profileEmail").removeAttribute("disabled");
+  safeGet("profileMobile").removeAttribute("disabled");
+  safeGet("profileAbout").removeAttribute("disabled");
+}
+
+async function renderMyQueries() {
+  const myList = document.getElementById("myQueriesList");
+  const currentUser = getCurrentUser();
+  if (!myList || !currentUser) return;
+
+ const res = await fetch("https://klqueries-backend-3.onrender.com/api/queries", {
+  headers: {
+    "Authorization": `Bearer ${localStorage.getItem("token")}`
+  }
+});
+
+  const allQueries = await res.json();
+
+  const myQueries = allQueries.filter(q => q.userId === currentUser.id);
+  const myReplies = allQueries
+    .filter(q => q.replies?.some(r => r.userId === currentUser.id))
+    .map(q => ({
+      queryText: q.text,
+      queryUser: q.userName,
+      queryTime: q.timestamp,
+      replies: q.replies.filter(r => r.userId === currentUser.id)
+    }));
+
+  let html = "";
+  if (myQueries.length === 0 && myReplies.length === 0) {
+    html = "<p>You haven't posted any queries or replies yet.</p>";
+  }
+
+  if (myQueries.length > 0) {
+    html += `<h4>Your Queries</h4>`;
+    myQueries.forEach(q => {
+      html += `
+        <div style="border-bottom:1px solid #ccc; margin-bottom:15px; padding-bottom:10px;">
+          <p><strong>Query:</strong> ${q.text}</p>
+          <small>Posted on ${formatIndianDate(q.timestamp)}</small>
+          <h5>Replies Received:</h5>
+          ${q.replies?.length > 0 ? q.replies.map(r => `
+            <div style="margin-left:15px;">
+              <p><strong>${r.userName || "Anonymous"}:</strong> ${r.text}</p>
+              <small>${formatIndianDate(r.timestamp)}</small>
+            </div>
+          `).join("") : "<p style='margin-left:15px;'>No replies yet.</p>"}
+        </div>
+      `;
+    });
+  }
+
+  if (myReplies.length > 0) {
+    html += `<h4>Your Replies to Others</h4>`;
+    myReplies.forEach(item => {
+      html += `
+        <div style="border-bottom:1px solid #ccc; margin-bottom:15px; padding-bottom:10px;">
+          <p><strong>Query by ${item.queryUser}:</strong> ${item.queryText}</p>
+          <small>${formatIndianDate(item.queryTime)}</small>
+          <h5>Your Reply:</h5>
+          ${item.replies.map(r => `
+            <div style="margin-left:15px;">
+              <p>${r.text}</p>
+              <small>${formatIndianDate(r.timestamp)}</small>
+            </div>
+          `).join("")}
+        </div>
+      `;
+    });
+  }
+
+  myList.innerHTML = html;
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  if (!isLoggedIn()) {
+    alert("Please log in first!");
+    window.location.href = "login.html";
+    return;
+  }
+
+  const user = getCurrentUser();
+  if (!user) return;
+
+  safeGet("profileName").value = user.name || "";
+  safeGet("profileEmail").value = user.email || "";
+  safeGet("profileMobile").value = user.mobile || "";
+  safeGet("profileAbout").value = user.about || "";
+
+  renderMyQueries();
+
+    const logoutBtn = document.getElementById("logoutBtn");
+  if (logoutBtn) {
+    logoutBtn.addEventListener("click", () => {
+      localStorage.removeItem("token");
+      localStorage.removeItem("currentUser");
+      alert("Logged out successfully!");
+      window.location.href = "login.html";
+    });
+  }
+
+  const editBtn = document.querySelector("button[onclick='enableEdit()']");
+  if (editBtn) {
+    editBtn.addEventListener("click", enableEdit);
+  }
+});
+</script>
+
+</body>
+</html>
