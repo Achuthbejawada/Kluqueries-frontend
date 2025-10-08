@@ -862,8 +862,7 @@ async function reportQuery(queryId) {
     }
 
     window.submitNestedReply = submitNestedReply;
-
-  function formatIndianDate(dateStr) {
+function formatIndianDate(dateStr) {
   if (!dateStr) return "Unknown";
   const d = new Date(dateStr);
   if (isNaN(d)) return "Unknown";
@@ -876,6 +875,7 @@ async function reportQuery(queryId) {
 
   return `${day}-${month}-${year} ${hours}:${minutes}`;
 }
+
 
 
 
