@@ -863,25 +863,20 @@ async function reportQuery(queryId) {
 
     window.submitNestedReply = submitNestedReply;
 
-   function formatIndianDate(dateStr) {
+  function formatIndianDate(dateStr) {
   if (!dateStr) return "Unknown";
-
-  // Force UTC interpretation if backend omits timezone
-  const d = new Date(dateStr.endsWith("Z") ? dateStr : dateStr + "Z");
+  const d = new Date(dateStr);
   if (isNaN(d)) return "Unknown";
 
-  // Convert to IST (UTC + 5:30)
-  const istOffset = 5.5 * 60; // minutes
-  const localTime = new Date(d.getTime() + istOffset * 60000);
-
-  const day = String(localTime.getDate()).padStart(2, '0');
-  const month = String(localTime.getMonth() + 1).padStart(2, '0');
-  const year = localTime.getFullYear();
-  const hours = String(localTime.getHours()).padStart(2, '0');
-  const minutes = String(localTime.getMinutes()).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  const month = String(d.getMonth() + 1).padStart(2, '0');
+  const year = d.getFullYear();
+  const hours = String(d.getHours()).padStart(2, '0');
+  const minutes = String(d.getMinutes()).padStart(2, '0');
 
   return `${day}-${month}-${year} ${hours}:${minutes}`;
 }
+
 
 
     function enableQueryEditBackend(queryId, oldText) {
