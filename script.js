@@ -24,7 +24,8 @@ function isLoggedIn() {
 }
 
 // Use a single base so we don't mix localhost/127.0.0.1 and create one place to change host/port
-const API_BASE = `${location.protocol}//${location.hostname}:8080`;
+const API_BASE = "https://klqueries-backend-production.up.railway.app";
+
 
 // ---------- Signup ----------
 async function handleSignup() {
@@ -371,7 +372,7 @@ async function handleResetPassword() {
           rb.innerHTML = `New Attendance: ${newAttendance.toFixed(2)}%`;
           qb.innerHTML = "Bunk happily brooo 🎉";
         } else if (newAttendance >= 75) {
-          rb.style.background = "#FACC15";
+          rb.style.background = "#383426ff";
           rb.innerHTML = `New Attendance: ${newAttendance.toFixed(2)}%`;
           qb.innerHTML = "Safe but you may be condonated 😅";
         } else {
