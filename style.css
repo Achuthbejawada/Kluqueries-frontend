@@ -851,3 +851,11 @@ footer {
 .report-icon:hover {
   transform: scale(1.1);
 }
+.calculator-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+.section {
+  flex: 1 1 280px;
+}
