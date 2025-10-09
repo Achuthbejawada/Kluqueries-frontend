@@ -36,8 +36,15 @@
 
       <p style="margin-top:10px; color:#ccc;">Or login with:</p>
       <div class="social-icons" style="margin-top:8px;">
-        <img src="google.png" alt="Google" class="social-icon" style="width:32px;">
-        <img src="facebook.png" alt="Facebook" class="social-icon" style="width:32px;">
+        <!-- Google Login -->
+        <a href="#" onclick="socialLoginNotice('Google'); return false;">
+          <img src="google.png" alt="Google" class="social-icon" style="width:32px;">
+        </a>
+
+        <!-- Facebook Login -->
+        <a href="#" onclick="socialLoginNotice('Facebook'); return false;">
+          <img src="facebook.png" alt="Facebook" class="social-icon" style="width:32px;">
+        </a>
       </div>
 
       <p style="margin-top:10px; color:#ccc;">Forgot password? <a href="forgot-password.html" style="color:#1EDFE6;">Click here</a></p>
@@ -48,7 +55,7 @@
   <footer>
     <div class="footer-left">
       <p>Developed by Achuth Bejawada</p>
-      <p>© 2025 Modern Attendance. All rights reserved.</p>
+      <p>© 2025 KL Queries. All rights reserved.</p>
     </div>
     <div class="footer-right">
       <a href="https://github.com/Achuthbejawada" target="_blank"><img src="Githubiconn.png" alt="GitHub"></a>
@@ -58,5 +65,10 @@
   </footer>
 
   <script src="script.js"></script>
+  <script>
+    function socialLoginNotice(platform) {
+      alert(`${platform} login is currently being set up. Please use manual login until then.`);
+    }
+  </script>
 </body>
 </html>
